@@ -63,4 +63,19 @@ public final class MqttMessages {
   public static final String LOG_MEET_ERROR_INSERTING_DEVICE_ARG_MEASUREMENTS_ARG_AT_TIME_ARG_680D67D2 = "插入设备 {}、测点 {}、时间 {} 时遇到错误，原因：";
   public static final String LOG_START_MQTT_SERVICE_SUCCESSFULLY_LISTENING_IP_ARG_PORT_ARG_47CE46D5 = "MQTT 服务启动成功，监听 IP {}，端口 {}";
 
+  // --- MQTTSubscriberService ---
+  public static final String LOG_START_MQTT_SUBSCRIBER_SERVICE_BROKER_ARG_ARG_TOPICS_ARG_BA1FA8CC = "MQTT 订阅服务已启动，Broker {}:{}，主题 {}";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_SUBSCRIBED_TO_THE_BROKER_ARG_ARG_TOPICS_ARG_85C2D4C7 = "MQTT 订阅端已订阅 Broker {}:{}，主题 {}";
+  public static final String LOG_STOPPING_IOTDB_MQTT_SUBSCRIBER_SERVICE_BC379BB3 = "正在停止 IoTDB MQTT 订阅服务...";
+  public static final String LOG_IOTDB_MQTT_SUBSCRIBER_SERVICE_STOPPED_246A2235 = "IoTDB MQTT 订阅服务已停止。";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_CONNECTION_TO_THE_BROKER_ARG_ARG_FAILED_RETRYING_IN_ARG_MS_REASON_6694CC00 = "MQTT 订阅端与 Broker {}:{} 的连接失败，{} 毫秒后重试。原因：";
+  public static final String LOG_RECEIVE_SUBSCRIBE_MESSAGE_TOPIC_ARG_PAYLOAD_LENGTH_ARG_78ECED0A = "收到订阅消息。主题: {}, 负载长度: {}";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_FAILED_TO_PROCESS_THE_MESSAGE_ON_TOPIC_ARG_REASON_4567D12D = "MQTT 订阅端处理主题 {} 上的消息失败。原因：";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_SERVICE_STOPS_RETRYING_AFTER_ARG_CONSECUTIVE_LOGIN_FAILURES_AS_USER_ARG_A2425C8C =
+      "MQTT 订阅端在连续 {} 次以用户 {} 登录失败后停止重试。";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_SERVICE_IS_ENABLED_BUT_MQTT_SUBSCRIBER_TOPICS_IS_EMPTY_436FA304 = "MQTT 订阅服务已启用，但 mqtt_subscriber_topics 为空。";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_QOS_MUST_BE_0_1_OR_2_BUT_IS_ARG_DDB4A981 = "MQTT 订阅端的 QoS 必须为 0、1 或 2，但为 %s。";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_PAYLOAD_FORMATTER_ARG_DOES_NOT_WRITE_THE_TABLE_MODEL_92690DCD = "MQTT 订阅端的 payload formatter %s 不会写入表模型。";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_FAILED_TO_LOGIN_TO_IOTDB_AS_USER_ARG_3BA5B995 = "MQTT 订阅端以用户 %s 登录 IoTDB 失败。";
+
 }

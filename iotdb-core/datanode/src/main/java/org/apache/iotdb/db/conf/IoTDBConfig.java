@@ -131,6 +131,39 @@ public class IoTDBConfig implements DefaultEncodingProvider {
   /** Max mqtt message size. Unit: byte */
   private int mqttMaxMessageSize = 1048576;
 
+  /**
+   * Whether to enable the mqtt subscriber service, which makes this node act as an MQTT client
+   * subscribing to an external broker.
+   */
+  private boolean enableMQTTSubscriberService = false;
+
+  /** The host of the external MQTT broker to subscribe. */
+  private String mqttSubscriberBrokerHost = "127.0.0.1";
+
+  /** The port of the external MQTT broker to subscribe. */
+  private int mqttSubscriberBrokerPort = 1883;
+
+  /** The topic filters to subscribe, separated by comma. */
+  private String mqttSubscriberTopics = "";
+
+  /** The QoS level used to subscribe the topics. */
+  private int mqttSubscriberQoS = 1;
+
+  /** The payload formatter used to parse the subscribed messages. */
+  private String mqttSubscriberPayloadFormatter = "line";
+
+  /** The username used to connect to the external MQTT broker. Empty means anonymous. */
+  private String mqttSubscriberBrokerUser = "";
+
+  /** The password used to connect to the external MQTT broker. */
+  private String mqttSubscriberBrokerPassword = "";
+
+  /** The IoTDB user that the subscribed data is written as. */
+  private String mqttSubscriberIoTDBUser = "root";
+
+  /** The IoTDB password that the subscribed data is written as. */
+  private String mqttSubscriberIoTDBPassword = "";
+
   /** Rpc binding address. */
   private String rpcAddress = "127.0.0.1";
 
@@ -2896,6 +2929,86 @@ public class IoTDBConfig implements DefaultEncodingProvider {
 
   public void setMqttMaxMessageSize(int mqttMaxMessageSize) {
     this.mqttMaxMessageSize = mqttMaxMessageSize;
+  }
+
+  public boolean isEnableMQTTSubscriberService() {
+    return enableMQTTSubscriberService;
+  }
+
+  public void setEnableMQTTSubscriberService(boolean enableMQTTSubscriberService) {
+    this.enableMQTTSubscriberService = enableMQTTSubscriberService;
+  }
+
+  public String getMqttSubscriberBrokerHost() {
+    return mqttSubscriberBrokerHost;
+  }
+
+  public void setMqttSubscriberBrokerHost(String mqttSubscriberBrokerHost) {
+    this.mqttSubscriberBrokerHost = mqttSubscriberBrokerHost;
+  }
+
+  public int getMqttSubscriberBrokerPort() {
+    return mqttSubscriberBrokerPort;
+  }
+
+  public void setMqttSubscriberBrokerPort(int mqttSubscriberBrokerPort) {
+    this.mqttSubscriberBrokerPort = mqttSubscriberBrokerPort;
+  }
+
+  public String getMqttSubscriberTopics() {
+    return mqttSubscriberTopics;
+  }
+
+  public void setMqttSubscriberTopics(String mqttSubscriberTopics) {
+    this.mqttSubscriberTopics = mqttSubscriberTopics;
+  }
+
+  public int getMqttSubscriberQoS() {
+    return mqttSubscriberQoS;
+  }
+
+  public void setMqttSubscriberQoS(int mqttSubscriberQoS) {
+    this.mqttSubscriberQoS = mqttSubscriberQoS;
+  }
+
+  public String getMqttSubscriberPayloadFormatter() {
+    return mqttSubscriberPayloadFormatter;
+  }
+
+  public void setMqttSubscriberPayloadFormatter(String mqttSubscriberPayloadFormatter) {
+    this.mqttSubscriberPayloadFormatter = mqttSubscriberPayloadFormatter;
+  }
+
+  public String getMqttSubscriberBrokerUser() {
+    return mqttSubscriberBrokerUser;
+  }
+
+  public void setMqttSubscriberBrokerUser(String mqttSubscriberBrokerUser) {
+    this.mqttSubscriberBrokerUser = mqttSubscriberBrokerUser;
+  }
+
+  public String getMqttSubscriberBrokerPassword() {
+    return mqttSubscriberBrokerPassword;
+  }
+
+  public void setMqttSubscriberBrokerPassword(String mqttSubscriberBrokerPassword) {
+    this.mqttSubscriberBrokerPassword = mqttSubscriberBrokerPassword;
+  }
+
+  public String getMqttSubscriberIoTDBUser() {
+    return mqttSubscriberIoTDBUser;
+  }
+
+  public void setMqttSubscriberIoTDBUser(String mqttSubscriberIoTDBUser) {
+    this.mqttSubscriberIoTDBUser = mqttSubscriberIoTDBUser;
+  }
+
+  public String getMqttSubscriberIoTDBPassword() {
+    return mqttSubscriberIoTDBPassword;
+  }
+
+  public void setMqttSubscriberIoTDBPassword(String mqttSubscriberIoTDBPassword) {
+    this.mqttSubscriberIoTDBPassword = mqttSubscriberIoTDBPassword;
   }
 
   public int getTagAttributeFlushInterval() {

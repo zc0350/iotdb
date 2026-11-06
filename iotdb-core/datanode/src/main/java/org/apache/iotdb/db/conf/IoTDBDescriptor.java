@@ -2127,6 +2127,58 @@ public class IoTDBDescriptor {
       conf.setMqttMaxMessageSize(
           Integer.parseInt(properties.getProperty(IoTDBConstant.MQTT_MAX_MESSAGE_SIZE).trim()));
     }
+
+    if (properties.getProperty(IoTDBConstant.ENABLE_MQTT_SUBSCRIBER) != null) {
+      conf.setEnableMQTTSubscriberService(
+          Boolean.parseBoolean(
+              properties.getProperty(IoTDBConstant.ENABLE_MQTT_SUBSCRIBER).trim()));
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_HOST) != null) {
+      conf.setMqttSubscriberBrokerHost(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_HOST).trim());
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_PORT) != null) {
+      conf.setMqttSubscriberBrokerPort(
+          Integer.parseInt(
+              properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_PORT).trim()));
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_TOPICS) != null) {
+      conf.setMqttSubscriberTopics(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_TOPICS).trim());
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_QOS) != null) {
+      conf.setMqttSubscriberQoS(
+          Integer.parseInt(properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_QOS).trim()));
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_PAYLOAD_FORMATTER) != null) {
+      conf.setMqttSubscriberPayloadFormatter(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_PAYLOAD_FORMATTER).trim());
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_USER) != null) {
+      conf.setMqttSubscriberBrokerUser(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_USER).trim());
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_PASSWORD) != null) {
+      conf.setMqttSubscriberBrokerPassword(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_BROKER_PASSWORD).trim());
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_IOTDB_USER) != null) {
+      conf.setMqttSubscriberIoTDBUser(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_IOTDB_USER).trim());
+    }
+
+    if (properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_IOTDB_PASSWORD) != null) {
+      conf.setMqttSubscriberIoTDBPassword(
+          properties.getProperty(IoTDBConstant.MQTT_SUBSCRIBER_IOTDB_PASSWORD).trim());
+    }
   }
 
   // timed flush memtable

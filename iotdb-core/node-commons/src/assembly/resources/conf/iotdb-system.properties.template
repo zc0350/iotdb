@@ -2418,6 +2418,82 @@ mqtt_payload_formatter=json
 mqtt_max_message_size=1048576
 
 ####################
+### MQTT Subscriber Configuration
+### Unlike the MQTT Broker above, this makes IoTDB act as an MQTT client that
+### subscribes to an external broker (e.g. EMQX, Mosquitto) and writes the
+### received messages into the database in real time.
+####################
+
+# whether to enable the mqtt subscriber service.
+# Note: this service starts on every DataNode. Until per-node selection or broker
+# side shared subscriptions are supported, enabling it on a multi-DataNode cluster
+# makes each DataNode subscribe independently and writes the same message more
+# than once. Keep it disabled on clusters with more than one DataNode.
+# effectiveMode: restart
+# Datatype: boolean
+enable_mqtt_subscriber_service=false
+
+# the host of the external MQTT broker to connect to.
+# effectiveMode: restart
+# Datatype: String
+mqtt_subscriber_broker_host=127.0.0.1
+
+# the port of the external MQTT broker to connect to.
+# effectiveMode: restart
+# Datatype: int
+mqtt_subscriber_broker_port=1883
+
+# the topic filters to subscribe, separated by comma, such as root.sg1.#,sensor/g1.
+# With the built-in line formatter the database is taken from the part of the
+# received topic before the first /, so the target database must exist beforehand.
+# effectiveMode: restart
+# Datatype: String
+mqtt_subscriber_topics=
+
+# the QoS level used to subscribe the topics.
+# Messages are acknowledged only after they are written, and the broker keeps the
+# unacknowledged QoS 1 and QoS 2 messages while this node is disconnected, so they
+# are delivered again once the connection is back. QoS 0 messages are lost if the
+# connection is down when they are published.
+# effectiveMode: restart
+# Options: [0, 1, 2]
+# Datatype: int
+mqtt_subscriber_qos=1
+
+# the payload formatter used to parse the subscribed messages.
+# effectiveMode: restart
+# Options: [json, line]
+# The built-in json only supports tree models, and the line only supports table models.
+# This service writes the table model, so the formatter must be a table type one.
+# Datatype: String
+mqtt_subscriber_payload_formatter=line
+
+# the username used to connect to the external MQTT broker. Empty means anonymous.
+# effectiveMode: restart
+# Datatype: String
+mqtt_subscriber_broker_user=
+
+# the password used to connect to the external MQTT broker.
+# effectiveMode: restart
+# Datatype: String
+mqtt_subscriber_broker_password=
+
+# the IoTDB user that the subscribed data is written as.
+# effectiveMode: restart
+# Datatype: String
+mqtt_subscriber_iotdb_user=root
+
+# the IoTDB password that the subscribed data is written as.
+# It must be configured explicitly when the service is enabled, and it is not
+# logged. Give this user write permission on the target databases only.
+# After 3 consecutive failed logins the service stops retrying, because the login
+# lock of this user would otherwise keep growing; check the configuration and
+# restart the node to start the subscriber again.
+# effectiveMode: restart
+# Datatype: String
+mqtt_subscriber_iotdb_password=
+
+####################
 ### IoTDB-AI Configuration
 ####################
 

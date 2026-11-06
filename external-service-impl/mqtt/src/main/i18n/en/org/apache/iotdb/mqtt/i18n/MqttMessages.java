@@ -67,4 +67,20 @@ public final class MqttMessages {
   public static final String LOG_MEET_ERROR_INSERTING_DEVICE_ARG_MEASUREMENTS_ARG_AT_TIME_ARG_680D67D2 = "meet error when inserting device {}, measurements {}, at time {}, because ";
   public static final String LOG_START_MQTT_SERVICE_SUCCESSFULLY_LISTENING_IP_ARG_PORT_ARG_47CE46D5 = "Start MQTT service successfully, listening on ip {} port {}";
 
+  // --- MQTTSubscriberService ---
+  public static final String LOG_START_MQTT_SUBSCRIBER_SERVICE_BROKER_ARG_ARG_TOPICS_ARG_BA1FA8CC = "Start MQTT subscriber service, broker {}:{}, topics {}";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_SUBSCRIBED_TO_THE_BROKER_ARG_ARG_TOPICS_ARG_85C2D4C7 = "The MQTT subscriber subscribed to the broker {}:{}, topics {}";
+  public static final String LOG_STOPPING_IOTDB_MQTT_SUBSCRIBER_SERVICE_BC379BB3 = "Stopping IoTDB MQTT subscriber service...";
+  public static final String LOG_IOTDB_MQTT_SUBSCRIBER_SERVICE_STOPPED_246A2235 = "IoTDB MQTT subscriber service stopped.";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_CONNECTION_TO_THE_BROKER_ARG_ARG_FAILED_RETRYING_IN_ARG_MS_REASON_6694CC00 =
+      "The MQTT subscriber connection to the broker {}:{} failed, retrying in {} ms. Reason: ";
+  public static final String LOG_RECEIVE_SUBSCRIBE_MESSAGE_TOPIC_ARG_PAYLOAD_LENGTH_ARG_78ECED0A = "Receive subscribe message. topic: {}, payload length: {}";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_FAILED_TO_PROCESS_THE_MESSAGE_ON_TOPIC_ARG_REASON_4567D12D = "The MQTT subscriber failed to process the message on topic {}. Reason: ";
+  public static final String LOG_THE_MQTT_SUBSCRIBER_SERVICE_STOPS_RETRYING_AFTER_ARG_CONSECUTIVE_LOGIN_FAILURES_AS_USER_ARG_A2425C8C =
+      "The MQTT subscriber service stops retrying after {} consecutive login failures as user {}.";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_SERVICE_IS_ENABLED_BUT_MQTT_SUBSCRIBER_TOPICS_IS_EMPTY_436FA304 = "The MQTT subscriber service is enabled but mqtt_subscriber_topics is empty.";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_QOS_MUST_BE_0_1_OR_2_BUT_IS_ARG_DDB4A981 = "The MQTT subscriber QoS must be 0, 1 or 2, but is %s.";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_PAYLOAD_FORMATTER_ARG_DOES_NOT_WRITE_THE_TABLE_MODEL_92690DCD = "The MQTT subscriber payload formatter %s does not write the table model.";
+  public static final String EXCEPTION_THE_MQTT_SUBSCRIBER_FAILED_TO_LOGIN_TO_IOTDB_AS_USER_ARG_3BA5B995 = "The MQTT subscriber failed to login to IoTDB as user %s.";
+
 }

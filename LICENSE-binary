@@ -246,6 +246,10 @@ io.dropwizard.metrics:metrics-core:4.2.19
 io.dropwizard.metrics:metrics-jvm:3.2.2
 com.librato.metrics:metrics-librato:5.1.0
 com.github.moquette-io.moquette:moquette-broker:0.18
+org.fusesource.mqtt-client:mqtt-client:1.16
+org.fusesource.hawtdispatch:hawtdispatch:1.22
+org.fusesource.hawtdispatch:hawtdispatch-transport:1.22
+org.fusesource.hawtbuf:hawtbuf:1.11
 io.netty:netty-buffer:4.1.137.Final
 io.netty:netty-codec:4.1.137.Final
 io.netty:netty-codec-http:4.1.137.Final

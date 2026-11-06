@@ -20,10 +20,8 @@ package org.apache.iotdb.mqtt;
 
 import org.apache.iotdb.common.rpc.thrift.TSStatus;
 import org.apache.iotdb.commons.conf.IoTDBConstant.ClientVersion;
-import org.apache.iotdb.commons.path.PartialPath;
 import org.apache.iotdb.commons.queryengine.common.SqlDialect;
 import org.apache.iotdb.commons.queryengine.utils.TimestampPrecisionUtils;
-import org.apache.iotdb.commons.schema.table.column.TsTableColumnCategory;
 import org.apache.iotdb.commons.utils.PathUtils;
 import org.apache.iotdb.db.auth.AuthorityChecker;
 import org.apache.iotdb.db.conf.IoTDBConfig;
@@ -37,12 +35,8 @@ import org.apache.iotdb.db.queryengine.plan.analyze.cache.schema.DataNodeDeviceP
 import org.apache.iotdb.db.queryengine.plan.analyze.schema.ClusterSchemaFetcher;
 import org.apache.iotdb.db.queryengine.plan.analyze.schema.ISchemaFetcher;
 import org.apache.iotdb.db.queryengine.plan.execution.ExecutionResult;
-import org.apache.iotdb.db.queryengine.plan.planner.LocalExecutionPlanner;
-import org.apache.iotdb.db.queryengine.plan.relational.metadata.Metadata;
 import org.apache.iotdb.db.queryengine.plan.relational.security.TreeAccessCheckContext;
-import org.apache.iotdb.db.queryengine.plan.relational.sql.parser.SqlParser;
 import org.apache.iotdb.db.queryengine.plan.statement.crud.InsertRowStatement;
-import org.apache.iotdb.db.queryengine.plan.statement.crud.InsertTabletStatement;
 import org.apache.iotdb.db.utils.CommonUtils;
 import org.apache.iotdb.mqtt.i18n.MqttMessages;
 import org.apache.iotdb.rpc.TSStatusCode;
@@ -55,15 +49,12 @@ import io.moquette.interception.messages.InterceptPublishMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.handler.codec.mqtt.MqttQoS;
 import org.apache.tsfile.enums.TSDataType;
-import org.apache.tsfile.utils.BitMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /** PublishHandler handle the messages from MQTT clients. */
 public class MPPPublishHandler extends AbstractInterceptHandler {
@@ -76,6 +67,7 @@ public class MPPPublishHandler extends AbstractInterceptHandler {
   private final ConcurrentHashMap<String, MqttClientSession> clientIdToSessionMap =
       new ConcurrentHashMap<>();
   private final PayloadFormatter payloadFormat;
+  private final TableMessageInserter tableMessageInserter = new TableMessageInserter();
   private final IPartitionFetcher partitionFetcher;
   private final ISchemaFetcher schemaFetcher;
   private final boolean useTableInsert;
@@ -157,7 +149,7 @@ public class MPPPublishHandler extends AbstractInterceptHandler {
           continue;
         }
         if (useTableInsert) {
-          insertTable((TableMessage) message, session);
+          tableMessageInserter.insert((TableMessage) message, session);
         } else {
           insertTree((TreeMessage) message, session);
         }
@@ -168,103 +160,6 @@ public class MPPPublishHandler extends AbstractInterceptHandler {
       // release the payload of the message
       super.onPublish(msg);
     }
-  }
-
-  /** Inserting table using tablet */
-  private void insertTable(TableMessage message, MqttClientSession session) {
-    TSStatus tsStatus = null;
-    try {
-      TimestampPrecisionUtils.checkTimestampPrecision(message.getTimestamp());
-      InsertTabletStatement insertTabletStatement = constructInsertTabletStatement(message);
-      session.setDatabaseName(message.getDatabase().toLowerCase());
-      session.setSqlDialect(SqlDialect.TABLE);
-      long queryId = sessionManager.requestQueryId();
-      SqlParser relationSqlParser = new SqlParser();
-      Metadata metadata = LocalExecutionPlanner.getInstance().metadata;
-      ExecutionResult result =
-          Coordinator.getInstance()
-              .executeForTableModel(
-                  insertTabletStatement,
-                  relationSqlParser,
-                  session,
-                  queryId,
-                  sessionManager.getSessionInfo(session),
-                  "",
-                  metadata,
-                  config.getQueryTimeoutThreshold());
-
-      tsStatus = result.status;
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(MqttMessages.PROCESS_RESULT, tsStatus);
-      }
-      if (tsStatus.getCode() != TSStatusCode.SUCCESS_STATUS.getStatusCode()
-          && tsStatus.getCode() != TSStatusCode.REDIRECTION_RECOMMEND.getStatusCode()) {
-        LOG.warn(
-            MqttMessages.LOG_MQTT_JSON_INSERT_ERROR_CODE_ARG_MESSAGE_ARG_B1A78FBD,
-            tsStatus.getCode(),
-            tsStatus.getMessage());
-      }
-    } catch (Exception e) {
-      LOG.warn(
-          MqttMessages.LOG_MEET_ERROR_INSERTING_DATABASE_ARG_TABLE_ARG_TAGS_ARG_ATTRIBUTES_173457D5,
-          message.getDatabase(),
-          message.getTable(),
-          message.getTagKeys(),
-          message.getAttributeKeys(),
-          message.getFields(),
-          message.getTimestamp(),
-          e);
-    }
-  }
-
-  private InsertTabletStatement constructInsertTabletStatement(TableMessage message) {
-    InsertTabletStatement insertStatement = new InsertTabletStatement();
-    insertStatement.setDevicePath(new PartialPath(message.getTable(), false));
-    List<String> measurements =
-        Stream.of(message.getFields(), message.getTagKeys(), message.getAttributeKeys())
-            .flatMap(List::stream)
-            .collect(Collectors.toList());
-    insertStatement.setMeasurements(measurements.toArray(new String[0]));
-    long[] timestamps = new long[] {message.getTimestamp()};
-    insertStatement.setTimes(timestamps);
-    int columnSize = measurements.size();
-    int rowSize = 1;
-
-    BitMap[] bitMaps = new BitMap[columnSize];
-    Object[] columns =
-        Stream.of(message.getValues(), message.getTagValues(), message.getAttributeValues())
-            .flatMap(List::stream)
-            .toArray(Object[]::new);
-    insertStatement.setColumns(columns);
-    insertStatement.setBitMaps(bitMaps);
-    insertStatement.setRowCount(rowSize);
-    insertStatement.setAligned(false);
-    insertStatement.setWriteToTable(true);
-    TSDataType[] dataTypes = new TSDataType[measurements.size()];
-    TsTableColumnCategory[] columnCategories = new TsTableColumnCategory[measurements.size()];
-    for (int i = 0; i < message.getFields().size(); i++) {
-      dataTypes[i] = message.getDataTypes().get(i);
-      columnCategories[i] = TsTableColumnCategory.FIELD;
-    }
-    for (int i = message.getFields().size();
-        i < message.getFields().size() + message.getTagKeys().size();
-        i++) {
-      dataTypes[i] = TSDataType.STRING;
-      columnCategories[i] = TsTableColumnCategory.TAG;
-    }
-    for (int i = message.getFields().size() + message.getTagKeys().size();
-        i
-            < message.getFields().size()
-                + message.getTagKeys().size()
-                + message.getAttributeKeys().size();
-        i++) {
-      dataTypes[i] = TSDataType.STRING;
-      columnCategories[i] = TsTableColumnCategory.ATTRIBUTE;
-    }
-    insertStatement.setDataTypes(dataTypes);
-    insertStatement.setColumnCategories(columnCategories);
-
-    return insertStatement;
   }
 
   private void insertTree(TreeMessage message, MqttClientSession session) {

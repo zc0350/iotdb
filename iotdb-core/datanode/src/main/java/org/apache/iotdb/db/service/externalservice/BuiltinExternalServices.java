@@ -29,6 +29,10 @@ public enum BuiltinExternalServices {
       "MQTT",
       "org.apache.iotdb.mqtt.MQTTService",
       IoTDBDescriptor.getInstance().getConfig()::isEnableMQTTService),
+  MQTT_SUBSCRIBER(
+      "MQTT_SUBSCRIBER",
+      "org.apache.iotdb.mqtt.MQTTSubscriberService",
+      IoTDBDescriptor.getInstance().getConfig()::isEnableMQTTSubscriberService),
   REST(
       "REST",
       "org.apache.iotdb.rest.RestService",

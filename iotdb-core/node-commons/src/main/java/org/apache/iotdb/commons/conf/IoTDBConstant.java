@@ -294,6 +294,19 @@ public class IoTDBConstant {
   public static final String MQTT_DATA_PATH = "mqtt_data_path";
   public static final String MQTT_MAX_MESSAGE_SIZE = "mqtt_max_message_size";
 
+  // mqtt subscriber (IoTDB acts as an MQTT client subscribing to an external broker)
+  public static final String ENABLE_MQTT_SUBSCRIBER = "enable_mqtt_subscriber_service";
+  public static final String MQTT_SUBSCRIBER_BROKER_HOST = "mqtt_subscriber_broker_host";
+  public static final String MQTT_SUBSCRIBER_BROKER_PORT = "mqtt_subscriber_broker_port";
+  public static final String MQTT_SUBSCRIBER_TOPICS = "mqtt_subscriber_topics";
+  public static final String MQTT_SUBSCRIBER_QOS = "mqtt_subscriber_qos";
+  public static final String MQTT_SUBSCRIBER_PAYLOAD_FORMATTER =
+      "mqtt_subscriber_payload_formatter";
+  public static final String MQTT_SUBSCRIBER_BROKER_USER = "mqtt_subscriber_broker_user";
+  public static final String MQTT_SUBSCRIBER_BROKER_PASSWORD = "mqtt_subscriber_broker_password";
+  public static final String MQTT_SUBSCRIBER_IOTDB_USER = "mqtt_subscriber_iotdb_user";
+  public static final String MQTT_SUBSCRIBER_IOTDB_PASSWORD = "mqtt_subscriber_iotdb_password";
+
   // thrift
   public static final int DEFAULT_FETCH_SIZE = 5000;
   public static final int DEFAULT_CONNECTION_TIMEOUT_MS = 0;
