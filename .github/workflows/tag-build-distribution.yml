@@ -50,6 +50,29 @@ jobs:
       - name: Package distribution
         shell: bash
         run: mvn clean package -pl distribution -am -DskipTests
+      # Packages are named after the pom version, so every tag would hand out an identical
+      # apache-iotdb-<pom version>-*-bin.zip. Re-stamp the names with the built ref instead;
+      # the .sha512 files hold a bare digest with no file name inside, so renaming them keeps
+      # them valid.
+      - name: Stamp packages with the built ref
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(mvn -q -N help:evaluate -Dexpression=project.version -DforceStdout)"
+          prefix="apache-iotdb-${version}-"
+          cd distribution/target
+          shopt -s nullglob
+          packages=("${prefix}"*-bin.zip)
+          if [ "${#packages[@]}" -eq 0 ]; then
+            echo "No package built for version ${version}"
+            exit 1
+          fi
+          for package in "${packages[@]}"; do
+            stamped="apache-iotdb-${GITHUB_REF_NAME}-${package#"${prefix}"}"
+            mv -v "${package}" "${stamped}"
+            mv -v "${package}.sha512" "${stamped}.sha512"
+          done
+          ls -l apache-iotdb-*.zip apache-iotdb-*.zip.sha512
       - name: Upload distribution packages
         uses: actions/upload-artifact@v6
         with:
